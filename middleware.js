@@ -1,6 +1,7 @@
 // validate.js
 const { plainToInstance } = require('class-transformer');
 const { validate } = require('class-validator');
+const jwt = require('jsonwebtoken');
 
 exports.validateDtoMiddleware = (dtoClass) => {
   return async (req, res, next) => {
@@ -19,30 +20,18 @@ exports.validateDtoMiddleware = (dtoClass) => {
     next();
   };
 }
-// exports.authenticateMiddleware = (user)=>{
-//   return async (req, res, next)=>{
-//     const token = req.header.authorization;
-//     if(token){
-//       jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-//         if(err){
-//           return res.sendStatus(403)
-//         }
-//         req.user = user
-//         next();
-//       });
-//     } else {
-//       return res.sendStatus(401)
-//     }
-//   }
-// }
-exports.authenticateMiddleware = (res, req, next)=>{
-  const token = req.header.authorization
-  if(!token){
-    return res.sendStatus(401);
+
+exports.authenticateMiddleware = (req, res, next)=>{
+  const getToken = req.headers['authorization'];
+  if (!getToken || !getToken.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
-  jwt.verify(token, SECRET_KEY, (err, user) => {
+  const token = getToken.split(' ')[1];
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) {
-      return res.sendStatus(403);
+      console.log("error", err)
+      return res.status(404).json({ error: 'Please log in and try again' });
     }
     req.user = user;
     next();
