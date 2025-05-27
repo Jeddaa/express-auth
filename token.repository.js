@@ -1,5 +1,5 @@
 const { TokenModel } = require('./schema');
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 class TokenRepository {
   constructor() {
     this.TokenModel = TokenModel;
@@ -8,7 +8,7 @@ class TokenRepository {
     return this.TokenModel.create(data);
   }
   findOneByUserId(data) {
-    return this.TokenModel.findOne(...data);
+    return this.TokenModel.findOne(data);
   }
 }
 module.exports = new TokenRepository();

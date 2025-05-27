@@ -2,17 +2,24 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
   {
-    userName: { type: String },
+    userName: { type: String, required: true, unique: true },
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String },
     isVerified: { type: Boolean, default: false },
+    isAuthor: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   },
 );
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject.password;
+  return userObject;
+};
+
 const UserModel = mongoose.model('User', userSchema);
 
 
@@ -30,20 +37,27 @@ const tokenSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+const TokenModel = mongoose.model('Token', tokenSchema);
 
-const bookSchema = new mongoose.Schema(
+const postSchema = new mongoose.Schema(
   {
-    userId: { type: String },
+    authorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: UserModel,
+    },
     title: { type: String },
     description: { type: String },
-    email: { type: String },
-    password: { type: String },
+    // tags: { type: String, required: true },
+    // category: { type: String, required: true },
   },
   {
     timestamps: true,
   },
 );
+const PostModel = mongoose.model('Post', postSchema);
+
 
 // module.exports={userSchema}
-const TokenModel = mongoose.model('Token', tokenSchema);
-module.exports = { UserModel, TokenModel };
+
+module.exports = { UserModel, TokenModel, PostModel };
