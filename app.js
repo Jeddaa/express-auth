@@ -1,10 +1,10 @@
 const express =require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
-const createRouter = require('./router')
 var bodyParser = require('body-parser');
 
-const app =express()
+
+let app =express()
 const PORT = 3000;
 require('dotenv').config();
 
@@ -18,7 +18,12 @@ mongoose.connect(process.env.DATABASE_URI)
 
 app.use(bodyParser.json());
 
-app.use('/api', createRouter);
+// app.use('/api', createRouter);
+app.use('/api/auth', require('./routes/userRouter'));
+app.use('/api/posts', require('./routes/postRouter'));
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
