@@ -14,11 +14,11 @@ const createToken = async (newUser) => {
   if(checktoks){
     const verificationLink = `http://localhost:3000/api/auth/verify/${newUser._id}/${checktoks.verificationToken}`;
     console.log('verification link', verificationLink);
-    // sendEmail(
-    //   newUser.email,
-    //   'Account Verification',
-    //   `<p>Please verify your email by clicking the link: <a href="${verificationLink}">Verify Email</a></p>`,
-    // );
+    sendEmail(
+      newUser.email,
+      'Account Verification',
+      `<p>Please verify your email by clicking the link: <a href="${verificationLink}">Verify Email</a></p>`,
+    );
     return true;
   }
   const verificationToken = crypto.randomBytes(32).toString('hex');
@@ -31,11 +31,11 @@ const createToken = async (newUser) => {
   if (createToken) {
     const verificationLink = `http://localhost:3000/api/auth/verify/${newUser._id}/${createToken.verificationToken}`;
     console.log('verification link', verificationLink);
-    // sendEmail(
-    //   newUser.email,
-    //   'Account Verification',
-    //   `<p>Please verify your email by clicking the link: <a href="${verificationLink}">Verify Email</a></p>`,
-    // );
+    sendEmail(
+      newUser.email,
+      'Account Verification',
+      `<p>Please verify your email by clicking the link: <a href="${verificationLink}">Verify Email</a></p>`,
+    );
     return true;
   } else {
     return false;
